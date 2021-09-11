@@ -1,70 +1,62 @@
-# Getting Started with Create React App
+# Hello there!
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a little styled component with React component viewer I'm working on, partially as another way to deep dive into React and see the fine little detials that I don't always have a chance to experiement with on client projects, it's also a nifty way at letting clientelle see the pieces of the project as they are built. They can fiddle with it and not mess with your project.
 
-## Available Scripts
+It's not complete, but so far - it recursively searches your components folder and created an index.js that imports all components and exports them as an array.
 
-In the project directory, you can run:
+It builds from the view folder.
 
-### `yarn start`
+The sidebar takes the array and created buttons that set the component to the component assiciated with the button.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+The Main component shows us the component (initally with default props)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+The bottom Main gives us the selectors to play with the props. Soon to each items show css as well (parent and children).
 
-### `yarn test`
+---
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+It does require some configuration on your components, but its not too much. Unless you have props defining each and every css property.
 
-### `yarn build`
+ex for a component with changing bg color
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+import styled from 'styled-components';
+import { theme } from '../../theme/theme.js';
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+const paletteArray = Object.entries(theme.palette);
+const colorNames = paletteArray.map((color) => {
+return color[0];
+});
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+const FooterStyle = styled.div` background-color: ${(props) => props.details.color}; height: 100px;`;
 
-### `yarn eject`
+const Footer = ({ bgColor = 'one' }) => {
+let details = {};
+for (let each of paletteArray) {
+if (bgColor === each[0]) {
+details.color = each[1];
+}
+}
+if (details.color === undefined) details.color = 'grey';
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+return <FooterStyle details={details}>Footer</FooterStyle>;
+};
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Footer.defaultProps = {
+bgColor: 'one',
+bgColor_Options: colorNames,
+};
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+export default Footer;
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+1. pull colors array from theme
 
-## Learn More
+2. convert to array, map and return colors
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+3. loop through paletteArray and set if's for each potential color - default if undefined just in case (usually to color1 or color5)
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+4. pass default props for the item (usually color1 or color5)
 
-### Code Splitting
+5. pass array of colorNames as '<property>\_Options': colorNames
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+---
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+This pattern can be followed for any values being manupilated via props. eg css, a number you create an array from than iterate over for items, really anything you need.
