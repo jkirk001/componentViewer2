@@ -13,6 +13,7 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
+    "dev": "node scripts/test.js && REACT_APP_MODE=dev react-scripts start",
     "start": "node scripts/test.js && REACT_APP_MODE=view react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
